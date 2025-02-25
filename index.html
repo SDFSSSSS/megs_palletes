@@ -48,13 +48,18 @@
 <body>
 
     <div class="container" id="inputContainer">
-        <h2>умник выбери дату рождения:</h2>
+        <h2>Выберите дату рождения:</h2>
         <input type="date" id="birthdate" onchange="generatePalette()">
     </div>
 
     <div class="palette" id="palette"></div>
 
     <script>
+        function seededRandom(seed) {
+            let x = Math.sin(seed) * 10000;
+            return x - Math.floor(x);
+        }
+
         function generatePalette() {
             let input = document.getElementById("birthdate").value;
             if (!input) return;
@@ -63,21 +68,21 @@
             let todaySeed = today.getFullYear() * 100 + today.getMonth() * 10 + today.getDate(); // Меняется каждый день
 
             let birthSeed = new Date(input).getTime() % 100000; // Получаем уникальный ID дня рождения
-            let seed = (birthSeed * todaySeed) % 100000; // Перемешиваем дату рождения и сегодняшний день
+            let seed = (birthSeed * todaySeed) % 100000; // Комбинируем дату рождения и сегодняшний день
 
             let colors = [];
             let paletteDiv = document.getElementById("palette");
+            paletteDiv.innerHTML = ""; // Очищаем предыдущие цвета
 
             for (let i = 0; i < 6; i++) {
-                let hue = (seed * (i + 1) * 137) % 360;  // Перемешанный цветовой тон
-                let saturation = 50 + (seed * (i + 2) % 50);  // Разнообразие насыщенности (50-100%)
-                let lightness = 40 + (seed * (i + 3) % 30);  // Разнообразие яркости (40-70%)
+                let hue = Math.floor(seededRandom(seed + i) * 360);  // Hue (0-360)
+                let saturation = Math.floor(seededRandom(seed + i * 2) * 50) + 50;  // 50-100%
+                let lightness = Math.floor(seededRandom(seed + i * 3) * 30) + 40;  // 40-70%
 
                 let hslColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
                 colors.push(hslColor);
             }
 
-            paletteDiv.innerHTML = "";
             colors.forEach(color => {
                 let div = document.createElement("div");
                 div.className = "color";

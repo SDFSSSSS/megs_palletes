@@ -17,17 +17,17 @@
             background-color: #f4f4f4;
             position: relative;
         }
-        h2 {
-            margin-bottom: 10px;
+        .container {
             position: relative;
             z-index: 2;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         input {
             font-size: 16px;
             padding: 5px;
-            position: relative;
-            z-index: 2;
-            background: white;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -47,8 +47,10 @@
 </head>
 <body>
 
-    <h2>умник введи дату рождения:</h2>
-    <input type="date" id="birthdate" onchange="generatePalette()">
+    <div class="container" id="inputContainer">
+        <h2>Выберите дату рождения:</h2>
+        <input type="date" id="birthdate" onchange="generatePalette()">
+    </div>
 
     <div class="palette" id="palette"></div>
 
@@ -62,8 +64,12 @@
             let paletteDiv = document.getElementById("palette");
 
             for (let i = 0; i < 6; i++) {
-                let randomColor = '#' + Math.floor((Math.sin(seed + i) * 10000) % 0xFFFFFF).toString(16).padStart(6, '0');
-                colors.push(randomColor);
+                let hue = (seed % 360 + i * 60) % 360;  // Разные оттенки по кругу
+                let saturation = 50 + (seed % 50);  // Случайная насыщенность (50-100%)
+                let lightness = 40 + (seed % 30);   // Яркость 40-70%
+
+                let hslColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                colors.push(hslColor);
             }
 
             paletteDiv.innerHTML = "";
@@ -74,7 +80,9 @@
                 paletteDiv.appendChild(div);
             });
 
+            // Показываем палитру и скрываем ввод
             paletteDiv.style.display = "flex"; 
+            document.getElementById("inputContainer").style.display = "none";
         }
     </script>
 

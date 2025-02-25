@@ -48,7 +48,7 @@
 <body>
 
     <div class="container" id="inputContainer">
-        <h2>Выберите дату рождения:</h2>
+        <h2>умник введи дату рождения:</h2>
         <input type="text" id="birthdate" placeholder="Введите дату (ГГГГ-ММ-ДД)" onfocus="(this.type='date')">
         <br><br>
         <button onclick="generatePalette()">Показать палитру</button>
@@ -64,10 +64,10 @@
 
         function generatePalette() {
             let input = document.getElementById("birthdate").value;
-            if (!input) return alert("Введите дату рождения!");
+            if (!input) return alert("введи уже");
 
             let birthDate = new Date(input);
-            if (isNaN(birthDate.getTime())) return alert("Неверный формат даты!");
+            if (isNaN(birthDate.getTime())) return alert("нормально введи");
 
             let today = new Date();
             let todaySeed = today.getFullYear() * 100 + today.getMonth() * 10 + today.getDate(); 

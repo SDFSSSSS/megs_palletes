@@ -59,14 +59,19 @@
             let input = document.getElementById("birthdate").value;
             if (!input) return;
 
-            let seed = new Date(input).getTime();
+            let today = new Date();
+            let todaySeed = today.getFullYear() * 100 + today.getMonth() * 10 + today.getDate(); // Меняется каждый день
+
+            let birthSeed = new Date(input).getTime() % 100000; // Получаем уникальный ID дня рождения
+            let seed = (birthSeed * todaySeed) % 100000; // Перемешиваем дату рождения и сегодняшний день
+
             let colors = [];
             let paletteDiv = document.getElementById("palette");
 
             for (let i = 0; i < 6; i++) {
-                let hue = (seed % 360 + i * 60) % 360;  // Разные оттенки по кругу
-                let saturation = 50 + (seed % 50);  // Случайная насыщенность (50-100%)
-                let lightness = 40 + (seed % 30);   // Яркость 40-70%
+                let hue = (seed * (i + 1) * 137) % 360;  // Перемешанный цветовой тон
+                let saturation = 50 + (seed * (i + 2) % 50);  // Разнообразие насыщенности (50-100%)
+                let lightness = 40 + (seed * (i + 3) % 30);  // Разнообразие яркости (40-70%)
 
                 let hslColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
                 colors.push(hslColor);

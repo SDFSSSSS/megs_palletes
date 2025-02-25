@@ -1,0 +1,52 @@
+import { useState, useEffect } from "react";
+import md5 from "md5";
+import { SketchPicker } from "react-color";
+
+export default function App() {
+  const [dob, setDob] = useState("");
+  const [palette, setPalette] = useState([]);
+
+  useEffect(() => {
+    if (dob) {
+      generatePalette(dob);
+    }
+  }, [dob]);
+
+  function generatePalette(dob) {
+    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+    const hash = md5(dob + today).slice(0, 30); // Генерируем хэш
+    const colors = [];
+
+    for (let i = 0; i < 5; i++) {
+      const color = "#" + hash.slice(i * 6, i * 6 + 6); // 6 символов на цвет
+      colors.push(color);
+    }
+    setPalette(colors);
+  }
+
+  return (
+    <div className="flex flex-col items-center min-h-screen bg-gray-100 p-5">
+      <h1 className="text-2xl font-bold mb-4">Ежедневная палитра</h1>
+      <input
+        type="date"
+        value={dob}
+        onChange={(e) => setDob(e.target.value)}
+        className="border p-2 rounded-lg mb-4"
+      />
+      {palette.length > 0 && (
+        <div className="grid grid-cols-5 gap-2 mb-4">
+          {palette.map((color, index) => (
+            <div
+              key={index}
+              className="w-16 h-16 rounded-lg shadow-lg cursor-pointer"
+              style={{ backgroundColor: color }}
+              title={color}
+              onClick={() => navigator.clipboard.writeText(color)}
+            ></div>
+          ))}
+        </div>
+      )}
+      {palette.length > 0 && <SketchPicker color={palette[0]} disableAlpha />}
+    </div>
+  );
+}
